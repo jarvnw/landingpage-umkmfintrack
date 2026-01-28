@@ -24,7 +24,8 @@ import {
   Star,
   AlertCircle,
   Search,
-  Smartphone
+  Smartphone,
+  Quote
 } from 'lucide-react';
 
 // --- Constants ---
@@ -32,6 +33,7 @@ const CTA_LINK = "http://lynk.id/firstpage.template/p4emxk1r4m23";
 const LOGO_URL = "https://ik.imagekit.io/hijar/favicon_orange_nZdGmQxhG.png?updatedAt=1769044850518&ik-s=26c0fe12b748484130c41f9eb73212542dc82a4d";
 const APP_NAME = "Aplikasi Manajemen Keuangan UMKM";
 const WHATSAPP_LINK = "https://wa.me/6282133279965?text=Halo%20Admin,%20Saya%20ingin%20bertanya%20mengenai%20produk%20Aplikasi%20Manajemen%20Keuangan%20UMKM%20yang%20kamu%20tawarkan.";
+const VIDEO_URL = "https://ik.imagekit.io/hijar/168343-838892838_tiny_NiBoW0YJs.mp4?updatedAt=1768824583219&ik-s=2c200592f888327af1e31c647e448ba9a8180ce6";
 
 const MOCK_DATA = [
   { name: 'Jan', profit: 4000 },
@@ -41,6 +43,50 @@ const MOCK_DATA = [
   { name: 'May', profit: 1890 },
   { name: 'Jun', profit: 2390 },
 ];
+
+const TESTIMONIALS = [
+  {
+    name: "Ibu Maya",
+    business: "Pemilik Bisnis Frozen Food",
+    text: "Dulu rekap di buku sering hilang, apalagi kalau lagi ramai pesanan. Sejak pakai sistem ini, tiap malam tinggal input sebentar sambil santai. Besok paginya, laporan sudah rapi. Benar-benar bikin tenang!",
+    img: "https://picsum.photos/seed/maya/100/100"
+  },
+  {
+    name: "Mas Aris",
+    business: "Kedai Kopi 'Sederhana'",
+    text: "Biasanya saya bingung duit hasil jualan kopi lari ke mana saja. Pas pakai alat ini, baru sadar kalau biaya print nota dan sedotan kalau dikumpulin ternyata lumayan juga. Sekarang pengeluaran sekecil apa pun jadi tercatat rapi.",
+    img: "https://picsum.photos/seed/aris/100/100"
+  },
+  {
+    name: "Pak Budi",
+    business: "Oleh-oleh Khas Daerah",
+    text: "Jujur saya orangnya malas kalau harus buka laptop atau belajar Excel lagi. Untungnya ini pakainya cuma kayak ngisi formulir di HP. Sambil jaga toko juga bisa langsung rekap, nggak pakai ribet.",
+    img: "https://picsum.photos/seed/budi/100/100"
+  },
+  {
+    name: "Mbak Sarah",
+    business: "Catering Rice Box",
+    text: "Dulu kalau ada pesanan katering, saya harus ngitung untung manual pakai kalkulator berkali-kali. Sekarang tinggal masukin total belanja dan harga jual, langsung kelihatan marginnya di grafik. Membantu banget buat nentuin harga jual ke depannya!",
+    img: "https://picsum.photos/seed/sarah/100/100"
+  },
+  {
+    name: "Bang Jaka",
+    business: "Sambal Rumahan Kemasan",
+    text: "Dulu saya bingung, stok sambal habis terus tapi kok saldo di rekening nggak nambah-nambah. Ternyata banyak 'biaya gaib' di dapur yang nggak kecatat. Sekarang, tiap habis belanja cabai atau botol, langsung saya input ke HP. Akhirnya ketahuan mana yang bikin boncos dan mana yang beneran untung. Nggak cuma capek jualan doang!",
+    img: "https://picsum.photos/seed/jaka/100/100"
+  }
+];
+
+// --- Helper for Smooth Scroll ---
+const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+  e.preventDefault();
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Update URL hash without jumping
+    window.history.pushState(null, '', `#${id}`);
+  }
+};
 
 // --- Components ---
 
@@ -54,6 +100,13 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navLinks = [
+    { name: 'Masalah', id: 'masalah' },
+    { name: 'Fitur', id: 'fitur' },
+    { name: 'Harga', id: 'harga' },
+    { name: 'FAQ', id: 'faq' },
+  ];
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'}`}>
       <div className="container mx-auto px-6 flex items-center justify-between">
@@ -63,16 +116,26 @@ const Header = () => {
         </a>
         
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#masalah" className="text-sm font-semibold hover:text-primary transition-colors">Masalah</a>
-          <a href="#fitur" className="text-sm font-semibold hover:text-primary transition-colors">Fitur</a>
-          <a href="#harga" className="text-sm font-semibold hover:text-primary transition-colors">Harga</a>
-          <a href="#faq" className="text-sm font-semibold hover:text-primary transition-colors">FAQ</a>
-          <a href={CTA_LINK} className="bg-primary hover:bg-orange-600 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20">
+          {navLinks.map((link) => (
+            <a 
+              key={link.id}
+              href={`#${link.id}`} 
+              onClick={(e) => scrollToSection(e, link.id)}
+              className="text-sm font-semibold hover:text-primary transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+          <a 
+            href="#harga" 
+            onClick={(e) => scrollToSection(e, 'harga')}
+            className="bg-primary hover:bg-orange-600 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20"
+          >
             Mulai Sekarang
           </a>
         </nav>
 
-        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+        <button className="md:hidden" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
           {isOpen ? <X /> : <Menu />}
         </button>
       </div>
@@ -85,11 +148,23 @@ const Header = () => {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 right-0 bg-white border-b p-6 flex flex-col gap-4 md:hidden shadow-xl"
           >
-            <a href="#masalah" onClick={() => setIsOpen(false)} className="font-semibold py-2 border-b">Masalah</a>
-            <a href="#fitur" onClick={() => setIsOpen(false)} className="font-semibold py-2 border-b">Fitur</a>
-            <a href="#harga" onClick={() => setIsOpen(false)} className="font-semibold py-2 border-b">Harga</a>
-            <a href="#faq" onClick={() => setIsOpen(false)} className="font-semibold py-2 border-b">FAQ</a>
-            <a href={CTA_LINK} className="bg-primary text-white text-center py-3 rounded-xl font-bold">Mulai Sekarang</a>
+            {navLinks.map((link) => (
+              <a 
+                key={link.id}
+                href={`#${link.id}`} 
+                onClick={(e) => { setIsOpen(false); scrollToSection(e, link.id); }}
+                className="font-semibold py-2 border-b"
+              >
+                {link.name}
+              </a>
+            ))}
+            <a 
+              href="#harga" 
+              onClick={(e) => { setIsOpen(false); scrollToSection(e, 'harga'); }}
+              className="bg-primary text-white text-center py-3 rounded-xl font-bold"
+            >
+              Mulai Sekarang
+            </a>
           </motion.div>
         )}
       </AnimatePresence>
@@ -107,7 +182,7 @@ const Hero = () => (
         viewport={{ once: true }}
       >
         <div className="inline-block px-4 py-2 bg-accent text-primary rounded-full text-xs font-bold mb-6 tracking-wide uppercase">
-          Solusi Keuangan UMKM No. 1 di Indonesia
+          {APP_NAME}
         </div>
         <h1 className="text-5xl lg:text-7xl font-serif font-black leading-tight mb-8">
           Urus Keuangan Bisnis Jadi Lebih <span className="text-primary">Tenang</span>, Nggak Pake Pusing.
@@ -116,7 +191,11 @@ const Hero = () => (
           Lupakan buku catatan yang sering terselip atau rekap berantakan di Excel. Ubah input harianmu menjadi <strong>'Buku Rekap Otomatis'</strong> yang rapi. Kamu yang input datanya, biarkan kami yang rapiin laporannya.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <a href={CTA_LINK} className="bg-primary hover:bg-orange-600 text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl shadow-primary/30 flex items-center justify-center gap-3 transition-transform hover:-translate-y-1">
+          <a 
+            href="#harga" 
+            onClick={(e) => scrollToSection(e, 'harga')}
+            className="bg-primary hover:bg-orange-600 text-white px-8 py-4 rounded-2xl text-lg font-bold shadow-xl shadow-primary/30 flex items-center justify-center gap-3 transition-transform hover:-translate-y-1"
+          >
             Aku Mau Rapikan Keuanganku Sekarang
             <ArrowRight size={20} />
           </a>
@@ -136,9 +215,9 @@ const Hero = () => (
         viewport={{ once: true }}
         className="relative"
       >
-        <div className="relative bg-white p-4 rounded-[2.5rem] shadow-2xl border border-zinc-100 rotate-2">
+        <div className="relative bg-white p-4 rounded-[0.5rem] shadow-2xl border border-zinc-100 rotate-2">
           <img 
-            src="https://picsum.photos/seed/dashboard/800/600" 
+            src="https://ik.imagekit.io/hijar/mockup_umkm%20fintrack_zBBnLErSB.jpg?updatedAt=1769606717696&ik-s=5aab179b827e522b285b7f5e170642d75e4982c4" 
             className="rounded-[2rem] w-full" 
             alt="App Preview" 
           />
@@ -160,7 +239,7 @@ const Hero = () => (
 );
 
 const ProblemSection = () => (
-  <section id="masalah" className="py-24 bg-zinc-50 relative overflow-hidden">
+  <section id="masalah" className="py-24 bg-zinc-50 relative overflow-hidden scroll-mt-24">
     <div className="container mx-auto px-6 relative z-10">
       <div className="text-center max-w-3xl mx-auto mb-16">
         <h2 className="text-4xl md:text-5xl font-serif font-black mb-6 leading-tight">
@@ -185,7 +264,7 @@ const ProblemSection = () => (
           },
           {
             icon: <Smartphone className="w-8 h-8 text-blue-500" />,
-            title: "Excel Terlalu Rumit & Nggak Bisa Dibuka di HP?",
+            title: "Excel Terlalu Rumit & Nggak Nyaman Dibuka di HP?",
             desc: "Pernah coba pakai Excel tapi pusing sama rumusnya? Belum lagi susah kalau harus buka laptop tiap kali ada transaksi masuk. Pengennya yang simpel aja!"
           }
         ].map((item, idx) => (
@@ -209,7 +288,6 @@ const ProblemSection = () => (
       </div>
     </div>
     
-    {/* Subtle Decorative Elements for "Pressure" feel */}
     <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
       <div className="absolute top-10 left-10 w-64 h-64 bg-zinc-400 rounded-full blur-[100px]" />
       <div className="absolute bottom-10 right-10 w-64 h-64 bg-zinc-300 rounded-full blur-[100px]" />
@@ -218,14 +296,13 @@ const ProblemSection = () => (
 );
 
 const BentoGrid = () => (
-  <section id="fitur" className="py-24 bg-white overflow-hidden">
+  <section id="fitur" className="py-24 bg-white overflow-hidden scroll-mt-24">
     <div className="container mx-auto px-6">
       <div className="text-center max-w-2xl mx-auto mb-16">
         <h2 className="text-4xl font-serif font-bold mb-4">Solusi Cerdas Untuk Bisnis Anda</h2>
         <p className="text-zinc-500">Kami menghapus kerumitan akuntansi. Fokus pada penjualan, serahkan rekap pada kami.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-auto md:auto-rows-[minmax(250px,auto)]">
-        {/* Large: Visualisasi Cash Flow */}
         <motion.div 
           whileHover={{ y: -5 }}
           className="md:col-span-2 md:row-span-2 bg-slate-50 p-6 md:p-8 rounded-3xl border border-zinc-200 flex flex-col justify-between group overflow-hidden"
@@ -256,7 +333,6 @@ const BentoGrid = () => (
           </div>
         </motion.div>
 
-        {/* Medium: Manajemen Transaksi */}
         <motion.div 
           whileHover={{ y: -5 }}
           className="bg-white p-6 md:p-8 rounded-3xl border border-zinc-200 flex flex-col justify-between overflow-hidden"
@@ -275,7 +351,6 @@ const BentoGrid = () => (
           </div>
         </motion.div>
 
-        {/* Small: Laporan PDF */}
         <motion.div 
           whileHover={{ y: -5 }}
           className="bg-white p-6 md:p-8 rounded-3xl border border-zinc-200 flex flex-col items-center justify-center text-center overflow-hidden"
@@ -287,7 +362,6 @@ const BentoGrid = () => (
           <p className="text-xs text-zinc-500">Download PDF dalam satu klik. Profesional!</p>
         </motion.div>
 
-        {/* Small: Pinjaman & Utang */}
         <motion.div 
           whileHover={{ y: -5 }}
           className="bg-zinc-900 text-white p-6 md:p-8 rounded-3xl flex flex-col justify-between overflow-hidden"
@@ -304,7 +378,6 @@ const BentoGrid = () => (
           </div>
         </motion.div>
 
-        {/* Medium: Target Profit */}
         <motion.div 
           whileHover={{ y: -5 }}
           className="md:col-span-1 bg-accent p-6 md:p-8 rounded-3xl border border-primary/20 flex flex-col justify-between overflow-hidden"
@@ -330,46 +403,66 @@ const VideoDemo = () => (
       <p className="text-zinc-400 mb-12 max-w-2xl mx-auto">
         Cek video singkat ini untuk lihat gimana 'Teras Digital' keuanganmu bekerja. Dari input manual yang simpel sampai jadi grafik yang keren.
       </p>
-      <div className="relative max-w-4xl mx-auto aspect-video rounded-[2.5rem] overflow-hidden group shadow-2xl">
-        <img src="https://picsum.photos/seed/video-placeholder/1200/675" className="w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110" alt="Video Demo" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button className="w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-2xl ring-8 ring-white/10">
-            <Play size={40} fill="currentColor" />
-          </button>
-        </div>
+      <div className="relative max-w-4xl mx-auto aspect-video rounded-[2rem] md:rounded-[2.5rem] overflow-hidden group shadow-2xl bg-black">
+        <video 
+          src={VIDEO_URL}
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+        >
+          Your browser does not support the video tag.
+        </video>
       </div>
     </div>
   </section>
 );
 
 const Testimonial = () => (
-  <section className="py-24 bg-white">
+  <section className="py-24 bg-slate-50">
     <div className="container mx-auto px-6">
-      <div className="max-w-4xl mx-auto text-center relative">
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-9xl text-zinc-100 font-serif -z-10">“</div>
-        <h2 className="text-3xl font-serif font-bold mb-12">Mereka yang Akhirnya Bisa Tidur Nyenyak.</h2>
-        <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-zinc-100 shadow-sm">
-          <div className="flex justify-center gap-1 mb-8">
-            {[1, 2, 3, 4, 5].map(i => <Star key={i} size={20} className="fill-primary text-primary" />)}
-          </div>
-          <p className="text-xl md:text-2xl font-medium leading-relaxed italic text-zinc-700 mb-10">
-            "Dulu rekap di buku sering hilang. Sejak pakai sistem ini, tiap malam tinggal input sebentar sambil santai. Besok paginya, laporan sudah rapi. Benar-benar bikin tenang!"
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <img src="https://picsum.photos/seed/maya/100/100" className="w-14 h-14 md:w-16 md:h-16 rounded-full border-4 border-white shadow-md" alt="Ibu Maya" />
-            <div className="text-left">
-              <p className="font-bold text-lg">Ibu Maya</p>
-              <p className="text-xs text-primary font-bold tracking-widest uppercase">Pemilik Bisnis Frozen Food</p>
+      <div className="text-center max-w-3xl mx-auto mb-16">
+        <h2 className="text-4xl md:text-5xl font-serif font-black mb-6 leading-tight">Beneran Membantu? Ini Kata Mereka.</h2>
+        <p className="text-zinc-600">Gabung bersama ratusan UMKM yang sudah lebih dulu merasakan ketenangan mengelola keuangan.</p>
+      </div>
+      
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        {TESTIMONIALS.map((t, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            className="break-inside-avoid bg-white p-8 rounded-[2rem] border border-zinc-200 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all group"
+          >
+            <div className="flex gap-1 mb-4">
+              {[1, 2, 3, 4, 5].map(star => <Star key={star} size={14} className="fill-primary text-primary" />)}
             </div>
-          </div>
-        </div>
+            <div className="relative">
+              <Quote className="absolute -top-2 -left-2 w-8 h-8 text-zinc-100 -z-0" />
+              <p className="text-zinc-700 leading-relaxed relative z-10 mb-8 italic">
+                "{t.text}"
+              </p>
+            </div>
+            <div className="flex items-center gap-4 pt-6 border-t border-zinc-50">
+              <img src={t.img} className="w-12 h-12 rounded-full border-2 border-white shadow-md flex-shrink-0" alt={t.name} />
+              <div>
+                <p className="font-bold text-zinc-900">{t.name}</p>
+                <p className="text-[10px] text-primary font-black tracking-widest uppercase">{t.business}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   </section>
 );
 
 const Pricing = () => (
-  <section id="harga" className="py-24 bg-slate-50">
+  <section id="harga" className="py-24 bg-white scroll-mt-24">
     <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
       <div>
         <h2 className="text-4xl font-serif font-bold mb-12">Cara Kerja Kami</h2>
@@ -393,14 +486,14 @@ const Pricing = () => (
         </div>
       </div>
       
-      <div className="bg-white p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl border-4 border-primary relative overflow-hidden transform md:hover:-rotate-1 transition-transform">
+      <div className="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl border-4 border-primary relative overflow-hidden transform md:hover:-rotate-1 transition-transform">
         <div className="absolute top-0 right-0 p-4">
           <div className="bg-primary text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest">Sekali Bayar</div>
         </div>
         <h3 className="text-zinc-500 font-bold uppercase tracking-widest text-sm mb-4">Investment</h3>
         <div className="flex items-baseline gap-2 mb-8">
           <span className="text-5xl md:text-6xl font-black">Rp199k</span>
-          <span className="text-zinc-400 line-through">Rp499k</span>
+          <span className="text-zinc-400 line-through">Rp399k</span>
         </div>
         <ul className="space-y-4 mb-10">
           {[
@@ -457,7 +550,7 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
 };
 
 const FAQ = () => (
-  <section id="faq" className="py-24 bg-white">
+  <section id="faq" className="py-24 bg-white scroll-mt-24">
     <div className="container mx-auto px-6 max-w-3xl">
       <h2 className="text-4xl font-serif font-bold mb-16 text-center">Tanya Jawab</h2>
       <div className="space-y-2">
@@ -484,8 +577,12 @@ const Footer = () => (
       <div className="bg-primary p-12 lg:p-24 rounded-[3rem] text-center text-white relative overflow-hidden mb-24">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
         <h2 className="text-4xl lg:text-6xl font-serif font-bold mb-8 relative z-10 leading-tight">Siap Buat Bisnis Kamu<br/>Naik Kelas?</h2>
-        <a href={CTA_LINK} className="bg-white text-primary px-12 py-5 rounded-2xl text-xl font-black inline-block shadow-2xl hover:scale-105 transition-transform relative z-10">
-          Beli Sekarang – Rp199.000
+        <a 
+          href="#harga" 
+          onClick={(e) => scrollToSection(e, 'harga')}
+          className="bg-white text-primary px-12 py-5 rounded-2xl text-xl font-black inline-block shadow-2xl hover:scale-105 transition-transform relative z-10"
+        >
+          Dapatkan Sekarang
         </a>
       </div>
       
@@ -522,10 +619,11 @@ const StickyCTA = () => {
           className="fixed bottom-0 left-0 right-0 z-[60] p-4 flex justify-center md:hidden"
         >
           <a 
-            href={CTA_LINK} 
+            href="#harga" 
+            onClick={(e) => scrollToSection(e, 'harga')}
             className="w-full bg-primary text-white py-4 rounded-2xl text-lg font-black text-center shadow-2xl flex items-center justify-center gap-3 active:scale-95 transition-transform"
           >
-            Beli Sekarang – Rp199rb
+            Mulai Sekarang
             <ArrowRight size={20} />
           </a>
         </motion.div>
